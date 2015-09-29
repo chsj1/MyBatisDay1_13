@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+	<!-- 
+mybatis.xml: 配置与数据库的连接信息
+ -->
+<configuration>
+
+<!-- 加载属性配置文件-->
+<properties resource="db.properties"/>
+
+<!-- 
+给某一个类型起别名.
+type:需要其别名的类型
+alias:别名
+ -->
+<typeAliases>
+<typeAlias type="com.hjd.mybatis.Student" alias="student"/>
+</typeAliases>
+
+    <!-- 在这里完成与多个数据库的连接信息的配置
+    default：默认使用哪一种数据库
+     -->
+	<environments default="mysql_developer">
+	    <!-- 与某一种数据库的链接的配置 -->
+		<environment id="mysql_developer">
+		<!-- 事务管理器,在这里使用的jdbc -->
+			<transactionManager type="jdbc" />
+			<!-- 配置连接池 -->
+			<dataSource type="pooled">
+			    <!-- 所使用的驱动.在这里是mysql的驱动 -->
+				<property name="driver" value="${mysql.driver}" />
+				<!-- 数据库的url -->
+				<property name="url" value="${mysql.url}" />
+				<!-- 这个是数据库的用户名 -->
+				<property name="username" value="${mysql.username}" />
+				<!-- 用户名所对应的密码 -->
+				<property name="password" value="${mysql.password}" />
+			</dataSource>
+		</environment>
+
+		<!--
+			<environment id="oracle_developer"> </environment>
+		-->
+	</environments>
+	
+	
+	<!-- 加载映射文件-->
+	<mappers>
+		<mapper resource="com/hjd/mybatis/StudentMapper.xml" />
+	</mappers>
+</configuration>
+ 

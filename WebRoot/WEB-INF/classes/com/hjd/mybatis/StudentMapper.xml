@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+XXXMapper.xml: 映射文件.完成实体类与数据库中表的映射关系.
+ -->
+<mapper namespace="com.hjd.mybatis.Student">
+
+<!-- 指定你要映射的类型
+type:需要映射的类型的全路径名.(在这里使用了别名)
+id:给这一次映射起一个名字
+ -->
+<resultMap type="student" id="studentmap">
+<!-- 
+<id/>： 主键属性的映射.其中property属性指的是实体类中成员变量的名字,column指的是表中
+列的名字.
+<result/> :非主键属性的映射
+ -->
+   <id property="id" column="id"/>
+   <result property="name" column="name"/>
+   <result property="sal" column="sal"/>
+</resultMap>
+
+<!-- 
+<insert />:标签指明这是一个insert语句.
+id: 给这一个SQL语句起一个唯一标识
+ -->
+<insert id="add1">
+insert into students1(id,name,sal) values(2,'hjd',60000.0);
+</insert>
+
+
+
+<!-- 
+插入语句：根据具体内容来插入
+ -->
+ <insert id="add2" parameterType="student">
+insert into students1(id,name,sal) values(#{id},#{name},#{sal});
+</insert>
+
+<!-- 
+update语句:根据具体内容来更新
+ -->
+ <update id="update1" parameterType="student">
+ update students1 set name=#{name},sal=#{sal} where id=#{id};
+ </update>
+ 
+ <!-- 
+ 查询一条记录
+  -->
+  <select id="findById" parameterType="int" resultType="student">
+  select * from students1 where id = #{id};
+  </select>
+  
+ <!-- 
+ 查询所有记录
+  -->
+  <select id="findAll" resultType="student">
+  select * from students1;
+  </select>
+  
+  <!-- 
+  查询:分页查询
+   -->
+ <select id="findAllByPage" parameterType="map"  resultType="student">
+  select * from students1 limit #{start},#{size};
+  </select>
+ 
+ <!-- 动态插入 -->
+	<!-- sql片段对应字段名,id属性值任意 -->
+	<sql id="key">
+		<!-- 如果名为id的成员变量的值不为空 -->
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				id,
+</if>
+			<if test="name!=null">
+				name,
+</if>
+			<if test="sal!=null">
+				sal,
+</if>
+		</trim>
+	</sql>
+
+
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 如果名为id的成员变量的值不为空 -->
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+		<if test="id!=null">
+			#{id},
+</if>
+		<if test="name!=null">
+			#{name},
+</if>
+		<if test="sal!=null">
+			#{sal},
+</if>
+
+</trim>
+	</sql>
+	<insert id="dynamicinsert" parameterType="student">
+		insert into students1(
+		<include refid="key" />
+		) values(
+		<include refid="value" />
+		);
+	</insert>
+
+<!-- 
+删除操作
+ -->
+<delete id="deleteById" parameterType="int">
+   delete from students1 where id = #{id};
+</delete>
+
+</mapper>
